@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>미레솔 (Miresol) - Future Education Solutions</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts: Noto Sans KR & Montserrat -->
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brandBlue: '#1E58A4',
+                        brandOrange: '#F0811A',
+                        brandGreen: '#50B848',
+                        brandNavy: '#172B4D',
+                    },
+                    fontFamily: {
+                        sans: ['Noto Sans KR', 'sans-serif'],
+                        montserrat: ['Montserrat', 'sans-serif'],
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body {
+            font-family: 'Noto Sans KR', sans-serif;
+            color: #1a202c;
+            background-color: #f8fafc;
+            word-break: keep-all;
+        }
+
+        /* 호버 및 액티브 카드 애니메이션 효과 */
+        .curriculum-card {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            cursor: pointer;
+        }
+
+        .curriculum-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+        }
+
+        .curriculum-card.active {
+            border-color: #F0811A !important;
+            box-shadow: 0 0 0 3px rgba(240, 129, 26, 0.25), 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            transform: translateY(-6px);
+        }
+
+        /* 탭 버튼 스타일 */
+        .tab-btn.active {
+            background-color: #1E58A4;
+            color: white;
+            box-shadow: 0 4px 12px rgba(30, 88, 164, 0.3);
+        }
+
+        /* 스크롤바 미세조정 */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 flex flex-col min-h-screen">
+
+    <!-- Navigation Header -->
+    <header class="sticky top-0 z-50 bg-white/95 backdrop-blur-md border-b border-slate-200 shadow-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+            <!-- Logo area: 세 번째 이미지의 정확한 컴팩트 정사각형 비율과 정교한 그래픽 구현 -->
+            <a href="#" class="flex items-center gap-3 group py-2">
+                <svg class="w-11 h-11 shrink-0 transition-transform duration-300 group-hover:scale-105" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <!-- Head -->
+                    <circle cx="100" cy="42" r="22" fill="#F0811A"/>
+                    <!-- Upper Torso & Arm -->
+                    <path d="M 68 85 C 68 62, 105 60, 142 60 C 168 60, 178 72, 150 88 C 118 102, 92 108, 68 140 C 68 115, 68 98, 68 85 Z" fill="url(#orangeGrad)"/>
+                    <!-- Dark Navy Arching Support / Lower Body -->
+                    <path d="M 98 94 C 115 90, 138 108, 148 168 C 128 168, 110 135, 96 112 C 96 104, 96 98, 98 94 Z" fill="#1C3058"/>
+                    <defs>
+                        <linearGradient id="orangeGrad" x1="68" y1="60" x2="160" y2="120" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" stop-color="#F28E2B"/>
+                            <stop offset="100%" stop-color="#E15712"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <div class="flex flex-col justify-center">
+                    <div class="flex items-center font-black tracking-tight leading-none text-2xl sm:text-3xl">
+                        <span class="text-brandBlue">미</span>
+                        <span class="text-brandOrange">레</span>
+                        <span class="text-brandGreen">솔</span>
+                    </div>
+                    <span class="font-montserrat text-[9px] sm:text-[10.5px] font-bold text-slate-500 tracking-wider mt-1 uppercase">Future Education Solutions</span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation Links -->
+            <nav class="hidden md:flex items-center gap-8 font-medium text-slate-700 text-base">
+                <a href="#about" class="hover:text-brandBlue transition-colors py-1">회사 소개</a>
+                <a href="#curriculum" class="hover:text-brandBlue transition-colors py-1">교육 과정</a>
+                <a href="#blockcoding" class="hover:text-brandBlue transition-colors py-1">블록코딩 체험</a>
+                <a href="#hardware" class="hover:text-brandBlue transition-colors py-1">교구 및 키트</a>
+                <a href="#contact" class="hover:text-brandBlue transition-colors py-1">문의하기</a>
+            </nav>
+
+            <!-- Header Right Buttons -->
+            <div class="hidden md:flex items-center gap-3">
+                <a href="#blockcoding" class="inline-flex items-center gap-2 bg-brandBlue hover:bg-blue-700 text-white font-semibold px-4 py-2.5 rounded-xl transition-all shadow-md hover:shadow-lg text-sm">
+                    <i class="fa-solid fa-laptop-code"></i>
+                    <span>블록코딩 시작</span>
+                </a>
+            </div>
+
+            <!-- Mobile menu button -->
+            <button id="mobileMenuBtn" class="md:hidden p-2 rounded-lg text-slate-600 hover:text-slate-900 hover:bg-slate-100">
+                <i class="fa-solid fa-bars text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Mobile Navigation Menu -->
+        <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-slate-200 px-4 pt-2 pb-6 space-y-3">
+            <a href="#about" class="block py-2 text-base font-medium text-slate-700 hover:text-brandBlue">회사 소개</a>
+            <a href="#curriculum" class="block py-2 text-base font-medium text-slate-700 hover:text-brandBlue">교육 과정</a>
+            <a href="#blockcoding" class="block py-2 text-base font-medium text-slate-700 hover:text-brandBlue">블록코딩 체험</a>
+            <a href="#hardware" class="block py-2 text-base font-medium text-slate-700 hover:text-brandBlue">교구 및 키트</a>
+            <a href="#contact" class="block py-2 text-base font-medium text-slate-700 hover:text-brandBlue">문의하기</a>
+            <a href="#blockcoding" class="w-full text-center block bg-brandBlue text-white font-semibold py-3 rounded-xl">블록코딩 시작하기</a>
+        </div>
+    </header>
+
+    <main class="flex-grow">
+        <!-- Hero Section -->
+        <section class="relative bg-gradient-to-b from-slate-900 via-brandNavy to-slate-900 text-white py-20 lg:py-28 overflow-hidden">
+            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    <div class="lg:col-span-7 space-y-6 text-center lg:text-left">
+                        <span class="inline-flex items-center gap-2 bg-brandOrange/20 border border-brandOrange/40 text-orange-300 text-sm font-semibold px-4 py-1.5 rounded-full">
+                            <i class="fa-solid fa-sparkles"></i> 미래를 여는 소프트웨어 & 피지컬 코딩
+                        </span>
+                        <h1 class="text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight leading-tight">
+                            상상이 현실이 되는 교육,<br>
+                            <span class="text-transparent bg-clip-text bg-gradient-to-r from-orange-400 via-amber-300 to-green-400">미레솔 Future Education</span>
+                        </h1>
+                        <p class="text-slate-300 text-base sm:text-lg lg:text-xl leading-relaxed max-w-2xl mx-auto lg:mx-0">
+                            기초 블록코딩부터 아두이노, 메카트로닉스, ESP32 스마트홈 IoT까지 단계별 체계적인 실습 교육 솔루션을 제공합니다.
+                        </p>
+                        <div class="flex flex-wrap items-center justify-center lg:justify-start gap-4 pt-4">
+                            <a href="#curriculum" class="bg-brandOrange hover:bg-orange-600 text-white font-bold px-7 py-3.5 rounded-xl shadow-lg transition-all text-base flex items-center gap-2">
+                                <span>교육 커리큘럼 보기</span>
+                                <i class="fa-solid fa-arrow-right"></i>
+                            </a>
+                            <a href="#blockcoding" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-semibold px-7 py-3.5 rounded-xl backdrop-blur-sm transition-all text-base flex items-center gap-2">
+                                <i class="fa-solid fa-play text-brandGreen"></i>
+                                <span>웹 블록코딩 체험</span>
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Right Graphics Mockup -->
+                    <div class="lg:col-span-5 flex justify-center">
+                        <div class="relative w-full max-w-md bg-slate-800/80 border border-slate-700/80 rounded-2xl p-6 shadow-2xl backdrop-blur-xl">
+                            <div class="flex items-center justify-between border-b border-slate-700 pb-4 mb-4">
+                                <div class="flex items-center gap-2">
+                                    <span class="w-3 h-3 rounded-full bg-red-500 inline-block"></span>
+                                    <span class="w-3 h-3 rounded-full bg-yellow-500 inline-block"></span>
+                                    <span class="w-3 h-3 rounded-full bg-green-500 inline-block"></span>
+                                </div>
+                                <span class="text-xs font-mono text-slate-400">Miresol_IoT_Controller.ino</span>
+                            </div>
+                            <div class="space-y-3 font-mono text-xs sm:text-sm text-emerald-400">
+                                <p><span class="text-blue-400">void</span> <span class="text-yellow-300">setup</span>() {</p>
+                                <p class="pl-4 text-slate-300">Serial.<span class="text-yellow-300">begin</span>(<span class="text-purple-400">115200</span>);</p>
+                                <p class="pl-4 text-slate-300">MiresolSensor.<span class="text-yellow-300">init</span>();</p>
+                                <p>}</p>
+                                <p><span class="text-blue-400">void</span> <span class="text-yellow-300">loop</span>() {</p>
+                                <p class="pl-4 text-slate-300"><span class="text-blue-400">int</span> sensorData = Miresol.<span class="text-yellow-300">read</span>();</p>
+                                <p class="pl-4 text-slate-300"><span class="text-purple-400">if</span> (sensorData &gt; <span class="text-purple-400">500</span>) {</p>
+                                <p class="pl-8 text-amber-300">SmartHome.<span class="text-yellow-300">triggerAlarm</span>();</p>
+                                <p class="pl-4 text-slate-300">}</p>
+                                <p>}</p>
+                            </div>
+                            <div class="mt-6 pt-4 border-t border-slate-700/80 flex items-center justify-between text-xs text-slate-400">
+                                <span class="flex items-center gap-1.5"><i class="fa-solid fa-circle text-emerald-500 text-[10px]"></i> ESP32 연결됨</span>
+                                <span>센서 데이터 동기화 완료</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Curriculum Section (입문, 중급, 고급 단계별 피지컬 코딩 과정) -->
+        <section id="curriculum" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <!-- Header -->
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-brandGreen font-bold tracking-widest uppercase text-sm sm:text-base">CURRICULUM</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2 tracking-tight">
+                        체계적인 단계별 피지컬 코딩 과정
+                    </h2>
+                    <p class="text-slate-600 text-base sm:text-lg mt-3 leading-relaxed">
+                        센서 기초 이해부터 메이커 제작 및 IoT 스마트홈 프로젝트로 확장되는 단계별 가이드
+                    </p>
+
+                    <!-- Interactive Tab Selector Buttons -->
+                    <div class="flex justify-center items-center gap-2 sm:gap-4 mt-8">
+                        <button onclick="selectLevel('all')" id="tab-all" class="tab-btn active px-5 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all border border-slate-200">
+                            전체 과정
+                        </button>
+                        <button onclick="selectLevel('beginner')" id="tab-beginner" class="tab-btn px-5 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all border border-slate-200 text-slate-700 hover:bg-slate-100">
+                            입문 과정
+                        </button>
+                        <button onclick="selectLevel('intermediate')" id="tab-intermediate" class="tab-btn px-5 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all border border-slate-200 text-slate-700 hover:bg-slate-100">
+                            중급 과정
+                        </button>
+                        <button onclick="selectLevel('advanced')" id="tab-advanced" class="tab-btn px-5 py-2.5 rounded-full text-sm sm:text-base font-bold transition-all border border-slate-200 text-slate-700 hover:bg-slate-100">
+                            고급 과정
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Curriculum Cards Grid (Interactive Hover & Cursor Focus) -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 relative items-stretch">
+                    
+                    <!-- Card 1: 입문 과정 (Beginner) -->
+                    <div id="card-beginner" onmouseenter="highlightCard('beginner')" onmouseleave="resetCardHighlight()" onclick="selectLevel('beginner')" class="curriculum-card bg-slate-50 border-2 border-slate-200/80 rounded-3xl p-7 sm:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-blue-100 text-brandBlue font-bold text-sm sm:text-base px-4 py-1.5 rounded-full">
+                                    입문 과정
+                                </span>
+                                <span class="text-xs text-slate-500 font-medium"><i class="fa-regular fa-clock mr-1"></i> 12~16차시</span>
+                            </div>
+
+                            <h3 class="text-2xl font-bold text-slate-900 mb-3 group-hover:text-brandBlue transition-colors">
+                                아두이노 기초 센서
+                            </h3>
+                            <p class="text-slate-600 text-base leading-relaxed mb-6">
+                                디지털/아날로그 입출력과 기초 알고리즘 구조를 블록코딩으로 손쉽게 구현합니다.
+                            </p>
+
+                            <hr class="border-slate-200 mb-6">
+
+                            <ul class="space-y-3.5 text-slate-700 font-medium text-base">
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandBlue text-lg"></i>
+                                    <span>아두이노 Uno R3 연동</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandBlue text-lg"></i>
+                                    <span>LED &amp; 버튼 스위치 제어</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandBlue text-lg"></i>
+                                    <span>버저 음악 음계 연주</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandBlue text-lg"></i>
+                                    <span>빛 감지 센서 조명 연동</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-8 pt-4 border-t border-slate-200/60">
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">추천 대상</span>
+                            <p class="text-sm text-slate-700 font-semibold">초등 고학년 ~ 중등 입문자</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 2: 중급 과정 (Intermediate) - Recommended Highlighted -->
+                    <div id="card-intermediate" onmouseenter="highlightCard('intermediate')" onmouseleave="resetCardHighlight()" onclick="selectLevel('intermediate')" class="curriculum-card bg-white border-2 border-brandOrange rounded-3xl p-7 sm:p-8 flex flex-col justify-between relative shadow-lg">
+                        <!-- Badge for recommended course -->
+                        <div class="absolute -top-4 right-8 bg-brandOrange text-white font-bold text-xs sm:text-sm px-4 py-1.5 rounded-full shadow-md">
+                            추천 코스
+                        </div>
+
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-orange-100 text-brandOrange font-bold text-sm sm:text-base px-4 py-1.5 rounded-full">
+                                    중급 과정
+                                </span>
+                                <span class="text-xs text-slate-500 font-medium"><i class="fa-regular fa-clock mr-1"></i> 20~24차시</span>
+                            </div>
+
+                            <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                                스마트 메이커 메카트로닉스
+                            </h3>
+                            <p class="text-slate-600 text-base leading-relaxed mb-6">
+                                스마트 RC카, 오토 휴지통, 스마트 LED 등을 조립하고 동작 코딩을 진행합니다.
+                            </p>
+
+                            <hr class="border-slate-200 mb-6">
+
+                            <ul class="space-y-3.5 text-slate-700 font-medium text-base">
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandOrange text-lg"></i>
+                                    <span>초음파 센서 감지 휴지통</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandOrange text-lg"></i>
+                                    <span>2WD 스마트 RC카 자율주행</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandOrange text-lg"></i>
+                                    <span>아크릴 무드등 감성 조명</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandOrange text-lg"></i>
+                                    <span>서보모터 각도 정밀 제어</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-8 pt-4 border-t border-slate-200/60">
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">추천 대상</span>
+                            <p class="text-sm text-slate-700 font-semibold">중학생 ~ 고등학생 / 메이커 동아리</p>
+                        </div>
+                    </div>
+
+                    <!-- Card 3: 고급 과정 (Advanced) -->
+                    <div id="card-advanced" onmouseenter="highlightCard('advanced')" onmouseleave="resetCardHighlight()" onclick="selectLevel('advanced')" class="curriculum-card bg-slate-50 border-2 border-slate-200/80 rounded-3xl p-7 sm:p-8 flex flex-col justify-between">
+                        <div>
+                            <div class="flex items-center justify-between mb-4">
+                                <span class="bg-green-100 text-brandGreen font-bold text-sm sm:text-base px-4 py-1.5 rounded-full">
+                                    고급 과정
+                                </span>
+                                <span class="text-xs text-slate-500 font-medium"><i class="fa-regular fa-clock mr-1"></i> 24~32차시</span>
+                            </div>
+
+                            <h3 class="text-2xl font-bold text-slate-900 mb-3">
+                                ESP32 &amp; 스마트 홈 IoT
+                            </h3>
+                            <p class="text-slate-600 text-base leading-relaxed mb-6">
+                                Wi-Fi 통신 기반 ESP32 보드로 데이터 센싱과 무선 원격 제어를 실습합니다.
+                            </p>
+
+                            <hr class="border-slate-200 mb-6">
+
+                            <ul class="space-y-3.5 text-slate-700 font-medium text-base">
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandGreen text-lg"></i>
+                                    <span>ESP32 Wi-Fi / BT 제어</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandGreen text-lg"></i>
+                                    <span>센서 데이터 웹 모니터링</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandGreen text-lg"></i>
+                                    <span>스마트홈 IoT 융합 솔루션</span>
+                                </li>
+                                <li class="flex items-center gap-3">
+                                    <i class="fa-regular fa-circle-check text-brandGreen text-lg"></i>
+                                    <span>클라우드 연동 및 앱 제어</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-8 pt-4 border-t border-slate-200/60">
+                            <span class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-2">추천 대상</span>
+                            <p class="text-sm text-slate-700 font-semibold">고등학생 ~ 대학생 / SW·AI 특성화반</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- Block Coding Platform Section -->
+        <section id="blockcoding" class="py-20 bg-slate-100 border-y border-slate-200">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="bg-gradient-to-r from-brandBlue to-indigo-900 rounded-3xl text-white p-8 sm:p-12 shadow-2xl relative overflow-hidden">
+                    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
+                        <div class="lg:col-span-7 space-y-5">
+                            <span class="bg-white/20 text-blue-100 font-semibold text-sm px-4 py-1.5 rounded-full backdrop-blur-md">
+                                웹 기반 무설치 소프트웨어
+                            </span>
+                            <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                                미레솔 웹 블록코딩 플랫폼
+                            </h2>
+                            <p class="text-blue-100 text-base sm:text-lg leading-relaxed">
+                                프로그램 설치 없이 웹 브라우저에서 바로 아두이노 및 ESP32 보드를 드래그 앤 드롭으로 코딩하세요.
+                            </p>
+                            <div class="pt-2 flex flex-wrap gap-4">
+                                <a href="https://2026jongil-kim.github.io/miresol-blockcoding/" target="_blank" rel="noopener noreferrer" class="bg-brandOrange hover:bg-orange-600 text-white font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg inline-flex items-center gap-2 text-base">
+                                    <span>새 창에서 블록코딩 열기</span>
+                                    <i class="fa-solid fa-up-right-from-square"></i>
+                                </a>
+                                <button onclick="toggleEmbedModal()" class="bg-white text-slate-900 hover:bg-slate-100 font-bold px-6 py-3.5 rounded-xl transition-all shadow-lg inline-flex items-center gap-2 text-base">
+                                    <i class="fa-solid fa-window-maximize text-brandBlue"></i>
+                                    <span>여기서 바로 체험하기</span>
+                                </button>
+                            </div>
+                        </div>
+
+                        <div class="lg:col-span-5 flex justify-center">
+                            <div class="bg-white p-4 rounded-2xl shadow-xl w-full max-w-sm text-slate-800">
+                                <div class="flex items-center gap-3 mb-4 border-b border-slate-100 pb-3">
+                                    <div class="w-10 h-10 rounded-xl bg-orange-100 flex items-center justify-center text-brandOrange">
+                                        <i class="fa-solid fa-cubes text-xl"></i>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-bold text-base">실시간 코드 변환</h4>
+                                        <p class="text-xs text-slate-500">블록 &rarr; C++ 아두이노 스케치</p>
+                                    </div>
+                                </div>
+                                <div class="space-y-2 text-sm">
+                                    <div class="p-2.5 bg-slate-50 rounded-lg flex items-center justify-between">
+                                        <span class="font-medium text-slate-700"><i class="fa-solid fa-plug text-brandBlue mr-2"></i>웹 시리얼 연결</span>
+                                        <span class="text-xs bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded">지원</span>
+                                    </div>
+                                    <div class="p-2.5 bg-slate-50 rounded-lg flex items-center justify-between">
+                                        <span class="font-medium text-slate-700"><i class="fa-solid fa-microchip text-brandOrange mr-2"></i>ESP32 / Uno 호환</span>
+                                        <span class="text-xs bg-emerald-100 text-emerald-700 font-bold px-2 py-0.5 rounded">100%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Embedded Web Block Coding Modal -->
+        <div id="embedModal" class="fixed inset-0 z-50 hidden bg-slate-900/80 backdrop-blur-sm flex items-center justify-center p-4">
+            <div class="bg-white w-full max-w-6xl h-[85vh] rounded-2xl overflow-hidden flex flex-col shadow-2xl">
+                <div class="bg-slate-900 text-white px-6 py-4 flex items-center justify-between">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-cubes text-brandOrange text-xl"></i>
+                        <span class="font-bold text-lg">미레솔 블록코딩 라이브 실습</span>
+                    </div>
+                    <button onclick="toggleEmbedModal()" class="text-slate-400 hover:text-white text-2xl font-bold px-2">
+                        &times;
+                    </button>
+                </div>
+                <div class="flex-grow bg-slate-100 relative">
+                    <iframe src="https://2026jongil-kim.github.io/miresol-blockcoding/" class="w-full h-full border-none" title="Miresol Block Coding"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <!-- Hardware & Kits Showcase -->
+        <section id="hardware" class="py-20 bg-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center max-w-3xl mx-auto mb-12">
+                    <span class="text-brandOrange font-bold tracking-widest uppercase text-sm sm:text-base">PRODUCTS &amp; KITS</span>
+                    <h2 class="text-3xl sm:text-4xl font-extrabold text-slate-900 mt-2">
+                        미레솔 피지컬 코딩 실습 키트
+                    </h2>
+                    <p class="text-slate-600 text-base sm:text-lg mt-3">
+                        교과 과정 및 자유학기제에 즉시 도입 가능한 최고 품질의 교육용 메이커 키트
+                    </p>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Kit Item 1 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col justify-between">
+                        <div class="p-6">
+                            <div class="w-full h-48 bg-slate-200 rounded-xl mb-5 flex items-center justify-center text-slate-400">
+                                <i class="fa-solid fa-microchip text-5xl text-brandBlue"></i>
+                            </div>
+                            <span class="text-xs font-bold text-brandBlue bg-blue-50 px-3 py-1 rounded-full">입문용 키트</span>
+                            <h3 class="text-xl font-bold text-slate-900 mt-2 mb-2">아두이노 기초 센서 종합키트</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                아두이노 Uno, 브레드보드, LED, 조도센서, 초음파센서, 부저 등 입문 필수 부품 모음
+                            </p>
+                        </div>
+                        <div class="p-6 pt-0 flex items-center justify-between">
+                            <span class="text-lg font-extrabold text-slate-900">45,000원</span>
+                            <button onclick="alert('교구 구매 및 견적 문의는 하단 연락처로 문의해주세요.')" class="bg-slate-900 hover:bg-brandBlue text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors">
+                                견적 문의
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Kit Item 2 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col justify-between">
+                        <div class="p-6">
+                            <div class="w-full h-48 bg-slate-200 rounded-xl mb-5 flex items-center justify-center text-slate-400">
+                                <i class="fa-solid fa-car text-5xl text-brandOrange"></i>
+                            </div>
+                            <span class="text-xs font-bold text-brandOrange bg-orange-50 px-3 py-1 rounded-full">중급 메카트로닉스</span>
+                            <h3 class="text-xl font-bold text-slate-900 mt-2 mb-2">2WD 자율주행 스마트 RC카 키트</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                모터드라이버, 초음파 센서, 적외선 라인트레이서 모듈 포함 스마트 자율주행 차체
+                            </p>
+                        </div>
+                        <div class="p-6 pt-0 flex items-center justify-between">
+                            <span class="text-lg font-extrabold text-slate-900">68,000원</span>
+                            <button onclick="alert('교구 구매 및 견적 문의는 하단 연락처로 문의해주세요.')" class="bg-slate-900 hover:bg-brandBlue text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors">
+                                견적 문의
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Kit Item 3 -->
+                    <div class="bg-slate-50 border border-slate-200 rounded-2xl overflow-hidden hover:shadow-xl transition-all flex flex-col justify-between">
+                        <div class="p-6">
+                            <div class="w-full h-48 bg-slate-200 rounded-xl mb-5 flex items-center justify-center text-slate-400">
+                                <i class="fa-solid fa-wifi text-5xl text-brandGreen"></i>
+                            </div>
+                            <span class="text-xs font-bold text-brandGreen bg-green-50 px-3 py-1 rounded-full">고급 IoT 키트</span>
+                            <h3 class="text-xl font-bold text-slate-900 mt-2 mb-2">ESP32 스마트홈 IoT 프로젝트 키트</h3>
+                            <p class="text-slate-600 text-sm leading-relaxed">
+                                Wi-Fi/블루투스 기반 ESP32 보드, 온습도 센서, OLED 디스플레이, 스마트 리걸 제어 모듈
+                            </p>
+                        </div>
+                        <div class="p-6 pt-0 flex items-center justify-between">
+                            <span class="text-lg font-extrabold text-slate-900">89,000원</span>
+                            <button onclick="alert('교구 구매 및 견적 문의는 하단 연락처로 문의해주세요.')" class="bg-slate-900 hover:bg-brandBlue text-white font-medium text-sm px-4 py-2 rounded-lg transition-colors">
+                                견적 문의
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact & Inquiry Section -->
+        <section id="contact" class="py-20 bg-slate-900 text-white">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12">
+                    <!-- Left info -->
+                    <div class="lg:col-span-5 space-y-6">
+                        <span class="text-brandOrange font-bold tracking-wider uppercase text-sm">CONTACT US</span>
+                        <h2 class="text-3xl sm:text-4xl font-extrabold tracking-tight">
+                            교육 및 교구 도입 문의
+                        </h2>
+                        <p class="text-slate-300 text-base leading-relaxed">
+                            학교 출강 교육, 교원 연수, 교구 수량 구매 및 맞춤형 커리큘럼 제안이 필요하시면 언제든 연락주세요.
+                        </p>
+
+                        <div class="space-y-4 pt-4">
+                            <div class="flex items-center gap-4 bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
+                                <div class="w-12 h-12 rounded-xl bg-brandOrange/20 flex items-center justify-center text-brandOrange text-xl shrink-0">
+                                    <i class="fa-solid fa-envelope"></i>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-slate-400 font-medium">이메일 문의</span>
+                                    <a href="mailto:munsu089@naver.com" class="text-base font-bold text-white hover:text-brandOrange transition-colors">munsu089@naver.com</a>
+                                </div>
+                            </div>
+
+                            <div class="flex items-center gap-4 bg-slate-800/80 p-4 rounded-2xl border border-slate-700">
+                                <div class="w-12 h-12 rounded-xl bg-brandBlue/20 flex items-center justify-center text-brandBlue text-xl shrink-0">
+                                    <i class="fa-solid fa-phone"></i>
+                                </div>
+                                <div>
+                                    <span class="block text-xs text-slate-400 font-medium">직통 대표 전화</span>
+                                    <a href="tel:01055241339" class="text-base font-bold text-white hover:text-brandBlue transition-colors">010-5524-1339</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Right Form -->
+                    <div class="lg:col-span-7 bg-white text-slate-900 rounded-3xl p-8 sm:p-10 shadow-2xl">
+                        <h3 class="text-2xl font-bold mb-6">온라인 상담 신청</h3>
+                        <form onsubmit="handleContactSubmit(event)" class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">성함 / 기관명</label>
+                                    <input type="text" required placeholder="홍길동 (OO초등학교)" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brandBlue text-base">
+                                </div>
+                                <div>
+                                    <label class="block text-sm font-semibold text-slate-700 mb-1">연락처</label>
+                                    <input type="tel" required placeholder="010-0000-0000" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brandBlue text-base">
+                                </div>
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">이메일</label>
+                                <input type="email" required placeholder="example@email.com" class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brandBlue text-base">
+                            </div>
+
+                            <div>
+                                <label class="block text-sm font-semibold text-slate-700 mb-1">문의 내용</label>
+                                <textarea rows="4" required placeholder="희망 교육 과정, 학생 수, 교구 견적 등 내용을 입력해 주세요." class="w-full px-4 py-3 rounded-xl border border-slate-300 focus:outline-none focus:ring-2 focus:ring-brandBlue text-base resize-none"></textarea>
+                            </div>
+
+                            <button type="submit" class="w-full bg-brandOrange hover:bg-orange-600 text-white font-bold py-4 rounded-xl shadow-lg transition-all text-base mt-2">
+                                상담 신청하기
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-slate-950 text-slate-400 py-10 border-t border-slate-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center sm:text-left flex flex-col sm:flex-row justify-between items-center gap-6">
+            <div class="flex items-center gap-3">
+                <svg class="w-8 h-8 shrink-0" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <circle cx="100" cy="42" r="22" fill="#F0811A"/>
+                    <path d="M 68 85 C 68 62, 105 60, 142 60 C 168 60, 178 72, 150 88 C 118 102, 92 108, 68 140 C 68 115, 68 98, 68 85 Z" fill="#F0811A"/>
+                    <path d="M 98 94 C 115 90, 138 108, 148 168 C 128 168, 110 135, 96 112 C 96 104, 96 98, 98 94 Z" fill="#1C3058"/>
+                </svg>
+                <span class="text-white font-bold text-lg">미레솔 Future Education Solutions</span>
+            </div>
+            <p class="text-sm">
+                &copy; 2026 Miresol. All rights reserved. | 이메일: munsu089@naver.com | 연락처: 010-5524-1339
+            </p>
+        </div>
+    </footer>
+
+    <!-- Interactive Logic Scripts -->
+    <script>
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            mobileMenu.classList.toggle('hidden');
+        });
+
+        // Block Coding Embed Modal Toggle
+        function toggleEmbedModal() {
+            const modal = document.getElementById('embedModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Curriculum Level Selection & Filter Logic
+        function selectLevel(level) {
+            const cards = {
+                beginner: document.getElementById('card-beginner'),
+                intermediate: document.getElementById('card-intermediate'),
+                advanced: document.getElementById('card-advanced')
+            };
+
+            const tabs = {
+                all: document.getElementById('tab-all'),
+                beginner: document.getElementById('tab-beginner'),
+                intermediate: document.getElementById('tab-intermediate'),
+                advanced: document.getElementById('tab-advanced')
+            };
+
+            // Update Tab Active States
+            Object.keys(tabs).forEach(key => {
+                if (key === level) {
+                    tabs[key].classList.add('active');
+                    tabs[key].classList.remove('text-slate-700');
+                } else {
+                    tabs[key].classList.remove('active');
+                    tabs[key].classList.add('text-slate-700');
+                }
+            });
+
+            // Card Highlight and Display Logic
+            Object.keys(cards).forEach(key => {
+                const card = cards[key];
+                if (level === 'all') {
+                    card.style.display = 'flex';
+                    card.classList.remove('active');
+                } else if (key === level) {
+                    card.style.display = 'flex';
+                    card.classList.add('active');
+                } else {
+                    card.style.display = 'none';
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        // Mouse Hover Card Highlight
+        function highlightCard(level) {
+            const card = document.getElementById(`card-${level}`);
+            if (card) {
+                card.classList.add('active');
+            }
+        }
+
+        function resetCardHighlight() {
+            // Check if a specific tab filter is active
+            const activeTab = document.querySelector('.tab-btn.active').id.replace('tab-', '');
+            ['beginner', 'intermediate', 'advanced'].forEach(level => {
+                const card = document.getElementById(`card-${level}`);
+                if (card && activeTab !== level) {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        // Form Submit Handler
+        function handleContactSubmit(event) {
+            event.preventDefault();
+            alert('상담 신청이 완료되었습니다. 확인 후 빠른 시일 내에 연락드리겠습니다.');
+            event.target.reset();
+        }
+    </script>
+</body>
+</html>
